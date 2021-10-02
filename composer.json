@@ -1,0 +1,19 @@
+{
+    "name": "merexo/rediska",
+    "description": "Package with predefined methods for Redis PHP",
+    "autoload": {
+        "psr-4": {
+            "Merexo\\Rediska\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ilya",
+            "email": "irexont@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ext-redis": "*"
+    },
+}

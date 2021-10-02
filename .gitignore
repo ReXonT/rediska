@@ -1,0 +1,7 @@
+.idea
+package-lock.json
+package.json
+/vendor/
+.htaccess
+composer.lock
+composer.phar
