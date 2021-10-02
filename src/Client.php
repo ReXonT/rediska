@@ -56,7 +56,7 @@ class Client
     private $host;
     private $port;
 
-    public function __construct($host = null, $port = null)
+    public function __construct($host = 'localhost', $port = 6379)
     {
         $this->host = $host;
         $this->port = $port;
