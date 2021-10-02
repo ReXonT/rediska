@@ -40,12 +40,14 @@ class Stream extends RedisPart
     }
 
     /**
-     * @param $key
+     * @param $keys
      * @return int
      */
-    public function drop($key)
+    public function drop($keys)
     {
-        return $this->redis->xDel($this->stream_key, $key);
+        if (!is_array($keys)) $keys = [$keys];
+
+        return $this->redis->xDel($this->stream_key, $keys);
     }
 
     /**
