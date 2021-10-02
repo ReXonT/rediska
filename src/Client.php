@@ -11,7 +11,7 @@ use Merexo\Rediska\Parts\Queue;
 use Merexo\Rediska\Parts\RateLimiter;
 use Merexo\Rediska\Parts\Stream;
 
-class Rediska
+class Client
 {
     /**
      * @var Redis|null
