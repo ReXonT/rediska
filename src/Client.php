@@ -16,161 +16,170 @@ class Client
     /**
      * @var Redis|null
      */
-    private static $connect = null;
+    private $connect = null;
 
     /**
      * @var Cache|null
      */
-    private static $cache = null;
+    private $cache = null;
 
     /**
      * @var Queue|null
      */
-    private static $queue = null;
+    private $queue = null;
 
     /**
      * @var DelayedQueue|null
      */
-    private static $delayed_queue = null;
+    private $delayed_queue = null;
 
     /**
      * @var Mutex|null
      */
-    private static $mutex = null;
+    private $mutex = null;
 
     /**
      * @var RateLimiter|null
      */
-    private static $rate_limiter = null;
+    private $rate_limiter = null;
 
     /**
      * @var PubSub|null
      */
-    private static $pub_sub = null;
+    private $pub_sub = null;
 
     /**
      * @var Stream|null
      */
-    private static $stream = null;
+    private $stream = null;
+
+    private $host;
+    private $port;
+
+    public function __construct($host = null, $port = null)
+    {
+        $this->host = $host;
+        $this->port = $port;
+    }
 
     /**
      * @return Redis|null
      */
-    public static function getInstance()
+    public function getInstance()
     {
-        return self::connect();
+        return $this->connect();
     }
 
     /**
      * @return Cache|null
      */
-    public static function cache()
+    public function cache()
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$cache === null) {
-            self::$cache = new Cache($redis);
+        if ($this->cache === null) {
+            $this->cache = new Cache($redis);
         }
 
-        return self::$cache;
+        return $this->cache;
     }
 
     /**
      * @return Queue|null
      */
-    public static function queue()
+    public function queue()
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$queue === null) {
-            self::$queue = new Queue($redis);
+        if ($this->queue === null) {
+            $this->queue = new Queue($redis);
         }
 
-        return self::$queue;
+        return $this->queue;
     }
 
     /**
      * @return DelayedQueue|null
      */
-    public static function delayedQueue()
+    public function delayedQueue()
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$delayed_queue === null) {
-            self::$delayed_queue = new DelayedQueue($redis);
+        if ($this->delayed_queue === null) {
+            $this->delayed_queue = new DelayedQueue($redis);
         }
 
-        return self::$delayed_queue;
+        return $this->delayed_queue;
     }
 
     /**
      * @return Mutex|null
      */
-    public static function mutex()
+    public function mutex()
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$mutex === null) {
-            self::$mutex = new Mutex($redis);
+        if ($this->mutex === null) {
+            $this->mutex = new Mutex($redis);
         }
 
-        return self::$mutex;
+        return $this->mutex;
     }
 
     /**
      * @return RateLimiter|null
      */
-    public static function rateLimiter()
+    public function rateLimiter()
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$rate_limiter === null) {
-            self::$rate_limiter = new RateLimiter($redis);
+        if ($this->rate_limiter === null) {
+            $this->rate_limiter = new RateLimiter($redis);
         }
 
-        return self::$rate_limiter;
+        return $this->rate_limiter;
     }
 
     /**
      * @return PubSub|null
      */
-    public static function pubSub()
+    public function pubSub()
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$pub_sub === null) {
-            self::$pub_sub = new PubSub($redis);
+        if ($this->pub_sub === null) {
+            $this->pub_sub = new PubSub($redis);
         }
 
-        return self::$pub_sub;
+        return $this->pub_sub;
     }
 
     /**
      * @return Stream|null
      */
-    public static function stream($stream_key)
+    public function stream($stream_key)
     {
-        $redis = self::getInstance();
+        $redis = $this->getInstance();
 
-        if (self::$stream === null) {
-            self::$stream = new Stream($redis, $stream_key);
+        if ($this->stream === null) {
+            $this->stream = new Stream($redis, $stream_key);
         }
 
-        return self::$stream;
+        return $this->stream;
     }
 
     /**
      * @return Redis|null
      */
-    private static function connect()
+    private function connect()
     {
-        if (self::$connect === null) {
+        if ($this->connect === null) {
             $redis = new Redis();
-            $redis->connect($_ENV['REDIS_HOST'], $_ENV['REDIS_PORT']);
+            $redis->connect($this->host ?: $_ENV['REDIS_HOST'], $this->port ?: $_ENV['REDIS_PORT']);
 
-            self::$connect = $redis;
+            $this->connect = $redis;
         }
 
-        return self::$connect;
+        return $this->connect;
     }
 }

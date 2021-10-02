@@ -24,6 +24,14 @@ class Cache extends RedisPart
     }
 
     /**
+     * @param string $key
+     */
+    public function drop(string $key)
+    {
+        $this->redis->del($key);
+    }
+
+    /**
      * @param array $keys
      * @return array
      */
@@ -38,13 +46,5 @@ class Cache extends RedisPart
     public function dropValues(array $keys)
     {
         $this->redis->rawCommand('MDEL', ...$keys);
-    }
-
-    /**
-     * @param string $key
-     */
-    public function drop(string $key)
-    {
-        $this->redis->del($key);
     }
 }
