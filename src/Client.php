@@ -2,6 +2,7 @@
 
 namespace Merexo\Rediska;
 
+use Merexo\Rediska\Parts\Set;
 use Redis;
 use Merexo\Rediska\Parts\Cache;
 use Merexo\Rediska\Parts\DelayedQueue;
@@ -52,6 +53,11 @@ class Client
      * @var Stream|null
      */
     private $stream = null;
+
+    /**
+     * @var Set|null
+     */
+    private $set = null;
 
     private $host;
     private $port;
@@ -166,6 +172,20 @@ class Client
         }
 
         return $this->stream;
+    }
+
+    /**
+     * @return Set|null
+     */
+    public function set($stream_key)
+    {
+        $redis = $this->getInstance();
+
+        if ($this->set === null) {
+            $this->set = new Set($redis, $stream_key);
+        }
+
+        return $this->set;
     }
 
     /**
