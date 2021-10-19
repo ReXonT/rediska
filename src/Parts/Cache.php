@@ -8,10 +8,11 @@ class Cache extends RedisPart
      * @param string $key
      * @param $value
      * @param int $ttl
+     * @return bool
      */
     public function set(string $key, $value, int $ttl = 3600)
     {
-        $this->redis->set($key, $value, ['EX' => $ttl]);
+        return $this->redis->set($key, $value, ['EX' => $ttl]);
     }
     
     /**
@@ -25,10 +26,11 @@ class Cache extends RedisPart
 
     /**
      * @param string $key
+     * @return int
      */
     public function drop(string $key)
     {
-        $this->redis->del($key);
+        return $this->redis->del($key);
     }
 
     /**
@@ -42,9 +44,10 @@ class Cache extends RedisPart
 
     /**
      * @param array $keys
+     * @return mixed
      */
     public function dropValues(array $keys)
     {
-        $this->redis->rawCommand('MDEL', ...$keys);
+        return $this->redis->rawCommand('MDEL', ...$keys);
     }
 }

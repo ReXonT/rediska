@@ -18,9 +18,13 @@ class Queue extends RedisPart
      * @param string $queue_name
      * @return bool|mixed
      */
-    public function pop(string $queue_name)
+    public function pop(string $queue_name, $block = false, $timeout = 10)
     {
-        return $this->redis->lPop($queue_name);
+        if ($block) {
+            return $this->redis->lPop($queue_name);
+        } else {
+            return $this->redis->blPop($queue_name, $timeout);
+        }
     }
 
     /**
