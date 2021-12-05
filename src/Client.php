@@ -17,7 +17,7 @@ class Client
     /**
      * @var Redis|null
      */
-    private $connect = null;
+    private $redis = null;
 
     /**
      * @var Cache|null
@@ -62,18 +62,20 @@ class Client
     private $host;
     private $port;
 
-    public function __construct($host = 'localhost', $port = 6379)
+    public function __construct($host = 'localhost', $port = 6379, $permanent = false)
     {
-        $this->host = $host;
-        $this->port = $port;
+        $this->host = $host ?? $_ENV['REDIS_HOST'];
+        $this->port = $port ?? $_ENV['REDIS_PORT'];
+
+        $this->connect($permanent);
     }
 
     /**
      * @return Redis|null
      */
-    public function getInstance()
+    public function getInstance($permanent = false)
     {
-        return $this->connect();
+        return $this->connect($permanent);
     }
 
     /**
@@ -81,10 +83,8 @@ class Client
      */
     public function cache()
     {
-        $redis = $this->getInstance();
-
         if ($this->cache === null) {
-            $this->cache = new Cache($redis);
+            $this->cache = new Cache($this->redis);
         }
 
         return $this->cache;
@@ -95,10 +95,8 @@ class Client
      */
     public function queue()
     {
-        $redis = $this->getInstance();
-
         if ($this->queue === null) {
-            $this->queue = new Queue($redis);
+            $this->queue = new Queue($this->redis);
         }
 
         return $this->queue;
@@ -109,10 +107,8 @@ class Client
      */
     public function delayedQueue()
     {
-        $redis = $this->getInstance();
-
         if ($this->delayed_queue === null) {
-            $this->delayed_queue = new DelayedQueue($redis);
+            $this->delayed_queue = new DelayedQueue($this->redis);
         }
 
         return $this->delayed_queue;
@@ -123,10 +119,8 @@ class Client
      */
     public function mutex()
     {
-        $redis = $this->getInstance();
-
         if ($this->mutex === null) {
-            $this->mutex = new Mutex($redis);
+            $this->mutex = new Mutex($this->redis);
         }
 
         return $this->mutex;
@@ -137,10 +131,8 @@ class Client
      */
     public function rateLimiter()
     {
-        $redis = $this->getInstance();
-
         if ($this->rate_limiter === null) {
-            $this->rate_limiter = new RateLimiter($redis);
+            $this->rate_limiter = new RateLimiter($this->redis);
         }
 
         return $this->rate_limiter;
@@ -151,10 +143,8 @@ class Client
      */
     public function pubSub()
     {
-        $redis = $this->getInstance();
-
         if ($this->pub_sub === null) {
-            $this->pub_sub = new PubSub($redis);
+            $this->pub_sub = new PubSub($this->redis);
         }
 
         return $this->pub_sub;
@@ -165,10 +155,8 @@ class Client
      */
     public function stream($stream_key)
     {
-        $redis = $this->getInstance();
-
         if ($this->stream === null) {
-            $this->stream = new Stream($redis, $stream_key);
+            $this->stream = new Stream($this->redis, $stream_key);
         }
 
         return $this->stream;
@@ -179,10 +167,8 @@ class Client
      */
     public function set($stream_key)
     {
-        $redis = $this->getInstance();
-
         if ($this->set === null) {
-            $this->set = new Set($redis, $stream_key);
+            $this->set = new Set($this->redis, $stream_key);
         }
 
         return $this->set;
@@ -191,15 +177,20 @@ class Client
     /**
      * @return Redis|null
      */
-    private function connect()
+    private function connect($permanent = false)
     {
-        if ($this->connect === null) {
+        if ($this->redis === null) {
             $redis = new Redis();
-            $redis->connect($this->host ?: $_ENV['REDIS_HOST'], $this->port ?: $_ENV['REDIS_PORT']);
 
-            $this->connect = $redis;
+            if ($permanent) {
+                $redis->pconnect($this->host, $this->port);
+            } else {
+                $redis->connect($this->host, $this->port);
+            }
+
+            $this->redis = $redis;
         }
 
-        return $this->connect;
+        return $this->redis;
     }
 }
