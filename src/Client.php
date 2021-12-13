@@ -19,46 +19,6 @@ class Client
      */
     private $redis = null;
 
-    /**
-     * @var Cache|null
-     */
-    private $cache = null;
-
-    /**
-     * @var Queue|null
-     */
-    private $queue = null;
-
-    /**
-     * @var DelayedQueue|null
-     */
-    private $delayed_queue = null;
-
-    /**
-     * @var Mutex|null
-     */
-    private $mutex = null;
-
-    /**
-     * @var RateLimiter|null
-     */
-    private $rate_limiter = null;
-
-    /**
-     * @var PubSub|null
-     */
-    private $pub_sub = null;
-
-    /**
-     * @var Stream|null
-     */
-    private $stream = null;
-
-    /**
-     * @var Set|null
-     */
-    private $set = null;
-
     private $host;
     private $port;
 
@@ -83,11 +43,7 @@ class Client
      */
     public function cache()
     {
-        if ($this->cache === null) {
-            $this->cache = new Cache($this->redis);
-        }
-
-        return $this->cache;
+        return new Cache($this->redis);
     }
 
     /**
@@ -95,11 +51,7 @@ class Client
      */
     public function queue()
     {
-        if ($this->queue === null) {
-            $this->queue = new Queue($this->redis);
-        }
-
-        return $this->queue;
+        return new Queue($this->redis);
     }
 
     /**
@@ -107,11 +59,7 @@ class Client
      */
     public function delayedQueue()
     {
-        if ($this->delayed_queue === null) {
-            $this->delayed_queue = new DelayedQueue($this->redis);
-        }
-
-        return $this->delayed_queue;
+        return new DelayedQueue($this->redis);
     }
 
     /**
@@ -119,11 +67,7 @@ class Client
      */
     public function mutex()
     {
-        if ($this->mutex === null) {
-            $this->mutex = new Mutex($this->redis);
-        }
-
-        return $this->mutex;
+        return new Mutex($this->redis);
     }
 
     /**
@@ -131,11 +75,7 @@ class Client
      */
     public function rateLimiter()
     {
-        if ($this->rate_limiter === null) {
-            $this->rate_limiter = new RateLimiter($this->redis);
-        }
-
-        return $this->rate_limiter;
+        return new RateLimiter($this->redis);
     }
 
     /**
@@ -143,11 +83,7 @@ class Client
      */
     public function pubSub()
     {
-        if ($this->pub_sub === null) {
-            $this->pub_sub = new PubSub($this->redis);
-        }
-
-        return $this->pub_sub;
+        return new PubSub($this->redis);
     }
 
     /**
@@ -155,11 +91,7 @@ class Client
      */
     public function stream($stream_key)
     {
-        if ($this->stream === null) {
-            $this->stream = new Stream($this->redis, $stream_key);
-        }
-
-        return $this->stream;
+        return new Stream($this->redis, $stream_key);
     }
 
     /**
@@ -167,11 +99,7 @@ class Client
      */
     public function set($stream_key)
     {
-        if ($this->set === null) {
-            $this->set = new Set($this->redis, $stream_key);
-        }
-
-        return $this->set;
+        return new Set($this->redis, $stream_key);
     }
 
     /**
