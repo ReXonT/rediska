@@ -5,6 +5,15 @@ namespace Merexo\Rediska\Parts;
 class Cache extends RedisPart
 {
     /**
+     * @param string ...$keys
+     * @return bool|int
+     */
+    public function has(string ...$keys)
+    {
+        return $this->redis->exists($keys);
+    }
+
+    /**
      * @param string $key
      * @param $value
      * @param int $ttl
@@ -13,6 +22,36 @@ class Cache extends RedisPart
     public function set(string $key, $value, int $ttl = 3600)
     {
         return $this->redis->set($key, $value, ['EX' => $ttl]);
+    }
+
+    /**
+     * @param string $key
+     * @param int $value
+     * @return int
+     */
+    public function incr(string $key, int $value = 1)
+    {
+        return $this->redis->incrBy($key, $value);
+    }
+
+    /**
+     * @param string $key
+     * @param int $value
+     * @return int
+     */
+    public function decr(string $key, int $value = 1)
+    {
+        return $this->redis->decrBy($key, $value);
+    }
+
+    /**
+     * @param string $key
+     * @param $value
+     * @return int
+     */
+    public function append(string $key, $value)
+    {
+        return $this->redis->append($key, $value);
     }
     
     /**
