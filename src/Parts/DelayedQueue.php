@@ -4,21 +4,11 @@ namespace Merexo\Rediska\Parts;
 
 class DelayedQueue extends RedisPart
 {
-    /**
-     * @param string $queue_name
-     * @param $payload
-     * @param int $delay
-     * @return mixed
-     */
     public function push(string $queue_name, $payload, int $delay = 180)
     {
         return $this->redis->rawCommand('ZADD', $queue_name, 'NX', time() + $delay, serialize($payload));
     }
 
-    /**
-     * @param string $queue_name
-     * @return mixed
-     */
     public function pop(string $queue_name)
     {
         $command = 'eval "
@@ -30,5 +20,10 @@ class DelayedQueue extends RedisPart
         ';
 
         return $this->redis->rawCommand($command, 1, $queue_name, time());
+    }
+
+    public function len(string $queue_name)
+    {
+        return $this->redis->zCard($queue_name);
     }
 }
