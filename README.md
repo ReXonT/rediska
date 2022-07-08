@@ -10,11 +10,6 @@ Installation via [Composer](https://getcomposer.org/):
 composer require merexo/rediska
 ```
 
-If redis ext is not install on your local machine:
-```bash
-composer require merexo/rediska --ignore-platform-reqs
-```
-
 ## Host/Port
 
 Default values: host = 'localhost', port = 6379. If you have .env, you can use arguments as ```null, null``` for host and port. In this case, Client will take ```$_ENV['REDIS_HOST']``` for host and ```$_ENV['REDIS_PORT']``` for port.
