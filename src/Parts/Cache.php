@@ -13,15 +13,10 @@ class Cache extends RedisPart
         return $this->redis->exists($keys);
     }
 
-    /**
-     * @param string $key
-     * @param $value
-     * @param int $ttl
-     * @return bool
-     */
-    public function set(string $key, $value, int $ttl = 3600)
+    public function set(string $key, $value, ?int $ttl = 3600)
     {
-        return $this->redis->set($key, $value, ['EX' => $ttl]);
+        $timeout = $ttl === null ? null : ['EX' => $ttl];
+        return $this->redis->set($key, $value, $timeout);
     }
 
     /**
