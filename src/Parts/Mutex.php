@@ -33,4 +33,15 @@ class Mutex extends RedisPart
         ';
         return (bool)$this->redis->eval($command, [$key, $hash], 1);
     }
+
+    public function releaseLockIfEmptyQueue(string $queue_name, string $mutex_name)
+    {
+        return $this->redis->eval('
+                local len = redis.call("LLEN", KEYS[1])
+                if (len == 0) then
+                    redis.call("DEL", ARGV[1])
+                end
+                return len
+        ', [$queue_name, $mutex_name], 1);
+    }
 }
